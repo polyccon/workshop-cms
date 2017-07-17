@@ -3,9 +3,18 @@ var fs = require('fs');
 
 var message = "I am so happy to be part of the Node Girls workshop!";
 
+var contentType = {
+  html: "text/html",
+  css: "text/css",
+  javascript: "applications/javascript",
+  ico: "image/x-icon",
+  jpg: "image/jpeg",
+  png: "image/png"
+};
 function handler (request, response) {
   var endpoint = request.url;
   console.log(endpoint);
+  var extension = endpoint.split('.')[1];
 
   if (endpoint === "/"){
     response.writeHead(200, {"Content-Type": "text/html"});
@@ -17,6 +26,11 @@ function handler (request, response) {
       }
       response.end(file);
     });
+  }
+  else if{
+    if (url.indexOf(public)!= -1){
+      response.writeHead(200, {"Content-Type": contentType[extension]});
+    }
   }
 }
 //   if (endpoint === "/node"){
