@@ -1,6 +1,7 @@
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
+var querystring = require('querystring');
 
 var message = "I am so happy to be part of the Node Girls workshop!";
 
@@ -11,6 +12,7 @@ var contentType = {
   ico: "image/x-icon",
   jpg: "image/jpeg",
   png: "image/png"
+
 };
 
 function handler(request, response) {
@@ -42,13 +44,26 @@ function handler(request, response) {
 
   } else if (endpoint === "/girls") {
     message = "we are node girls";
-    
+
     response.writeHead(200, {
       "Content-Type": "text/html"
     });
     response.write(message);
     response.end();
-  } else {
+  } else if (endpoint==="/create-post"){
+
+    var allTheData = '';
+    request.on("data", function(chunckOfData){
+      allTheData += chunckOfData;
+    });
+    request.on('end', function(){
+      var convertedData = querystring.parse(allTheData);
+      console.log(convertedData);
+      response.writeHead(303, {"Location": "/"});
+      response.end();
+    })
+  }
+  else {
      var filePath = path.join(__dirname, '../public', endpoint);
 
     response.writeHead(200, {
@@ -62,6 +77,7 @@ function handler(request, response) {
       response.end(file);
     });
   }
+
 
 }
 
