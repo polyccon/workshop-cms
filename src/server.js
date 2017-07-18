@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+var path = require('path');
 
 var message = "I am so happy to be part of the Node Girls workshop!";
 
@@ -31,25 +32,37 @@ function handler(request, response) {
     });
   } else if (endpoint === "/node") {
     message = "You requested node";
-  // var method = request.method;
-     console.log(method);
-     response.writeHead(200, {"Content-Type": "text/html"});
-     response.write(message);
-     response.end();
+    var method = request.method;
+    console.log(method);
+    response.writeHead(200, {
+      "Content-Type": "text/html"
+    });
+    response.write(message);
+    response.end();
 
   } else if (endpoint === "/girls") {
     message = "we are node girls";
-    console.log(method);
-    response.writeHead(200, {"Content-Type": "text/html"});
+    
+    response.writeHead(200, {
+      "Content-Type": "text/html"
+    });
     response.write(message);
     response.end();
-  } else if {
-    if (url.indexOf(public) != -1) {
-      response.writeHead(200, {
-        "Content-Type": contentType[extension]
-      });
-    }
+  } else {
+     var filePath = path.join(__dirname, '../public', endpoint);
+
+    response.writeHead(200, {
+      "Content-Type": contentType[extension]
+    });
+    fs.readFile(filePath, function(error, file) {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      response.end(file);
+    });
   }
+
 }
 
 var server = http.createServer(handler);
